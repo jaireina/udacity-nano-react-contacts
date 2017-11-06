@@ -24,7 +24,7 @@ class App extends Component {
       }
     ]
   }
-  removeContact = (contact)=>{
+  deleteContact = (contact)=>{
     this.setState( (currentState) => ({
       contacts: currentState.contacts.filter( c => c.id !== contact.id )
     }));
@@ -35,7 +35,7 @@ class App extends Component {
       <div>
         <ListContacts 
           contacts={this.state.contacts} 
-          onRemoveContact={this.removeContact}
+          onDeleteContact={this.deleteContact}
         />
       </div>
     );

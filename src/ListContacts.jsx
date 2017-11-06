@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import escapeRegExp from 'escape-string-regexp';
+import sortBy from 'sort-by';
 
 class ListContacts extends Component{
 	static propTypes = {
 		contacts: PropTypes.array.isRequired,
-		onRemoveContact: PropTypes.func.isRequired
+		onDeleteContact: PropTypes.func.isRequired
 	}
 
 	state = {
@@ -12,13 +14,26 @@ class ListContacts extends Component{
 	}
 
 	updateQuery(query){
-		this.setState({query: query.trim()});
+		this.setState({query});
+	}
+
+	clearQuery(){
+		this.updateQuery('');
 	}
 
 	render(){
+		let {contacts, onDeleteContact} = this.props;
+		const {query} = this.state;
+		let showingContacts = contacts;
+		if(query){
+			const match = new RegExp(escapeRegExp(query),'i');
+			showingContacts = contacts.filter((c)=> match.test(c.name));
+		}
+		
+		showingContacts.sort(sortBy('name'));
+
 		return(
 			<div className="list-contacts">
-				{JSON.stringify(this.state)}
 				<div className="list-contacts-top">
 					<input 
 						type="text" 
@@ -27,8 +42,20 @@ class ListContacts extends Component{
 						value={this.state.query}
 						onChange={(e)=>this.updateQuery(e.target.value)}/>
 				</div>
+				
+				{showingContacts.length !== contacts.length && (
+					<div className="showing-contacts">
+						<span>Now showing {showingContacts.length} of {contacts.length}</span>
+						<button onClick={this.clearQuery}>Show All</button>
+					</div>
+				)}
+
+				<div>
+					Showing 
+				</div>
+				
 				<ol className="contact-list">
-					{this.props.contacts.map(contact => (
+					{showingContacts.map(contact => (
 						<li key={contact.id} className="contact-list-item">
 							<div className="contact-avatar" style={{backgroundImage: `url(${contact.avatarURL})`}}/>
 							<div className="contact-details">
@@ -37,7 +64,7 @@ class ListContacts extends Component{
 							</div>
 							<button 
 								className="contact-remove" 
-								onClick={()=>this.props.onRemoveContact(contact)}>Remove</button>
+								onClick={()=>onDeleteContact(contact)}>Remove</button>
 						</li>
 					))}
 				</ol>
