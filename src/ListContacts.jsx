@@ -49,10 +49,6 @@ class ListContacts extends Component{
 						<button onClick={this.clearQuery}>Show All</button>
 					</div>
 				)}
-
-				<div>
-					Showing 
-				</div>
 				
 				<ol className="contact-list">
 					{showingContacts.map(contact => (
