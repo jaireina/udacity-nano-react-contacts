@@ -28,6 +28,10 @@ class App extends Component {
       });
   }
 
+  showCreateContact = (screen="create")=>{
+    this.setState({screen})
+  }
+
   render() {
     return (
       <div className="app">
@@ -36,6 +40,7 @@ class App extends Component {
           <ListContacts 
             contacts={this.state.contacts} 
             onDeleteContact={this.deleteContact}
+            onCreateContact={this.showCreateContact}
           />
         )}
         
