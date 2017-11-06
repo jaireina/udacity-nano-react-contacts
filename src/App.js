@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import ListContacts from './ListContacts.jsx';
 import * as ContactsAPI from './utils/ContactsAPI';
+import CreateContact from './CreateContact';
 
 class App extends Component {
   state = {
+    screen:'list', //list,create
     contacts: []
   }
 
   componentDidMount(){
-    console.log('mounted');
     ContactsAPI
       .getAll()
       .then((contacts)=>{
@@ -18,18 +19,30 @@ class App extends Component {
   }
 
   deleteContact = (contact)=>{
-    this.setState( (currentState) => ({
-      contacts: currentState.contacts.filter( c => c.id !== contact.id )
-    }));
+    ContactsAPI
+      .remove(contact)
+      .then((contact)=>{
+        this.setState( (currentState) => ({
+          contacts: currentState.contacts.filter( c => c.id !== contact.id )
+        }));
+      });
   }
 
   render() {
     return (
-      <div>
-        <ListContacts 
-          contacts={this.state.contacts} 
-          onDeleteContact={this.deleteContact}
-        />
+      <div className="app">
+        
+        {this.state.screen === 'list' && (
+          <ListContacts 
+            contacts={this.state.contacts} 
+            onDeleteContact={this.deleteContact}
+          />
+        )}
+        
+        {this.state.screen === 'create' && (
+          <CreateContact />
+        )}
+
       </div>
     );
   }
