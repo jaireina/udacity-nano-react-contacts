@@ -6,7 +6,6 @@ import CreateContact from './CreateContact';
 
 class App extends Component {
   state = {
-    screen:'list', //list,create
     contacts: []
   }
 
@@ -27,10 +26,6 @@ class App extends Component {
           contacts: currentState.contacts.filter( c => c.id !== contact.id )
         }));
       });
-  }
-
-  showCreateContact = (screen="create")=>{
-    this.setState({screen})
   }
 
   render() {
